@@ -14,32 +14,25 @@ abstract class WeatherAbstract
         private HttpClientInterface $httpClient
     )
     {
+        $this->setResponseData();
     }
 
     protected string $apiKey;
 
     protected string $apiUrl;
 
-    protected function getData(): iterable
-    {
-        if (!$this->isPossibleToUseApi()) {
-            return [];
-        }
+    protected iterable $responseData = [];
 
+    protected function setResponseData(): void
+    {
         $response = $this->httpClient->request(
             static::API_METHOD_TYPE,
             $this->apiUrl,
             $this->getApiCallParameters()
         );
 
-        return $response->toArray();
+        $this->responseData = $response->toArray();
     }
-
-    private function isPossibleToUseApi(): bool
-    {
-        return $this->apiUrl && $this->apiKey;
-    }
-
 
     abstract protected function getApiCallParameters(): array;
 

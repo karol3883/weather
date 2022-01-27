@@ -19,6 +19,33 @@ class WeatherRepository extends ServiceEntityRepository
         parent::__construct($registry, Weather::class);
     }
 
+    public function getTemperaturesFromCityGroupByHours(string $cityName)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT
+                c.name,
+                w.temperature,
+               DATE_FORMAT(w.create_at, '%Y-%m-%d %H:%i') as date
+            FROM
+                weather w   
+            JOIN
+                city c ON (c.id = w.city_id)
+            WHERE
+                c.name = :val
+            GROUP BY
+                c.name,
+                w.temperature
+            LIMIT
+                100
+        ";
+
+
+        dd($connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative());
+        return $connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Weather[] Returns an array of Weather objects
     //  */

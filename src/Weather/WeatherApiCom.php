@@ -19,14 +19,8 @@ class WeatherApiCom extends WeatherAbstract
         ];
     }
 
-    public function getCurrentTemperature(): mixed
+    public function getCurrentTemperature(): ?float
     {
-        $responseData = $this->getData();
-
-        if (empty($responseData['current']['temp_c'])) {
-            throw new \Exception(sprintf('Temperature not exists. Propably api data has been changed'));
-        }
-
-        return (float) $responseData['current']['temp_c'];
+        return !empty($this->responseData['current']['temp_c']) ? (float) $this->responseData['current']['temp_c'] : null;
     }
 }

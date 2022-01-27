@@ -19,18 +19,31 @@ class WeatherApiService
      */
     public function getCurrentAverageTemperature(string $cityName): mixed
     {
-
         $weatherFactory = new WeatherFactory($cityName, $this->httpClient);
 
-        $iterator = 0;
         $existingTemperatureData = 0;
         $temperaturesSum = 0;
 
         foreach ($this->listOfWeatherApiClasses as $apiClass) {
-            $temperaturesSum += $weatherFactory->getWeatherApiInstance($apiClass)->getCurrentTemperature();
-            $existingTemperatureData++;
+
+            try {
+                $weatherApiInstance = $weatherFactory->getWeatherApiInstance($apiClass);
+                $temperature = $weatherApiInstance->getCurrentTemperature();
+
+                if (is_numeric($temperature = $weatherApiInstance->getCurrentTemperature()))  {
+                    $temperaturesSum += $temperature;
+                    $existingTemperatureData++;
+                }
+
+            } catch (\Exception $exception) {
+
+            }
         }
-        var_dump($existingTemperatureData);
+
+        if ($existingTemperatureData === 0) {
+            throw new \Exception("No data from any api");
+        }
+
 
         return round($temperaturesSum / $existingTemperatureData, 2);
     }
