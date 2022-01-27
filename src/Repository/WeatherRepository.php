@@ -36,13 +36,18 @@ class WeatherRepository extends ServiceEntityRepository
                 c.name = :val
             GROUP BY
                 c.name,
-                w.temperature
+                w.temperature,
+                DATE_FORMAT(w.create_at, '%Y-%m-%d %H')
+            ORDER BY
+                DATE_FORMAT(w.create_at, '%Y-%m-%d %H') ASC  
             LIMIT
                 100
         ";
 
 
-        dd($connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative());
+        echo "<pre>";
+        var_dump($connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative());
+        echo "</pre>";
         return $connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative();
     }
 

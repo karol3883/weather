@@ -25,18 +25,15 @@ class WeatherApiService
         $temperaturesSum = 0;
 
         foreach ($this->listOfWeatherApiClasses as $apiClass) {
-
             try {
                 $weatherApiInstance = $weatherFactory->getWeatherApiInstance($apiClass);
                 $temperature = $weatherApiInstance->getCurrentTemperature();
 
-                if (is_numeric($temperature = $weatherApiInstance->getCurrentTemperature()))  {
+                if (is_numeric($temperature = $weatherApiInstance->getCurrentTemperature())) {
                     $temperaturesSum += $temperature;
                     $existingTemperatureData++;
                 }
-
             } catch (\Exception $exception) {
-
             }
         }
 

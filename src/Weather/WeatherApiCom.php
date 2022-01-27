@@ -4,7 +4,6 @@ namespace App\Weather;
 
 class WeatherApiCom extends WeatherAbstract
 {
-
     protected string $apiKey = 'aaa3889517594fa7a97175112222501';
 
     protected string $apiUrl = 'http://api.weatherapi.com/v1/forecast.json';

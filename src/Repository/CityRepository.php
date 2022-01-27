@@ -15,18 +15,30 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CityRepository extends ServiceEntityRepository
 {
+    private const MAX_CITIES_EXCEPT_CITY_RESULT = 15;
+    private const DEFAULT_CITIES_EXCEPT_CITY_RESULT = 5;
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, City::class);
     }
 
 
-    public function createCityIfNotExtists(string $cityName): void
+    /**
+     * Returns cities except city passed by
+     * @param string $cityName
+     * @return int|mixed|string
+     */
+    public function getCitiesExceptCity(string $cityName, int $limit = self::DEFAULT_CITIES_EXCEPT_CITY_RESULT)
     {
-        if (!$cityName) {
-            return;
-        }
+        $limit = min($limit, static::MAX_CITIES_EXCEPT_CITY_RESULT);
 
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.name != :cityName')
+            ->setParameter('cityName', $cityName)
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()
+            ->getResult();
     }
     // /**
     //  * @return City[] Returns an array of City objects

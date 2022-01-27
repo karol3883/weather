@@ -6,22 +6,22 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 abstract class WeatherAbstract
 {
-
-    const API_METHOD_TYPE = 'GET';
-
-    public function __construct(
-        protected string $cityName,
-        private HttpClientInterface $httpClient
-    )
-    {
-        $this->setResponseData();
-    }
-
     protected string $apiKey;
 
     protected string $apiUrl;
 
     protected iterable $responseData = [];
+
+    public const API_METHOD_TYPE = 'GET';
+
+
+    public function __construct(
+        protected string $cityName,
+        private HttpClientInterface $httpClient
+    ) {
+        $this->setResponseData();
+    }
+
 
     protected function setResponseData(): void
     {

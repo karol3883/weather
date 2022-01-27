@@ -2,7 +2,6 @@
 
 namespace App\Weather;
 
-
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WeatherFactory
@@ -10,9 +9,7 @@ class WeatherFactory
     public function __construct(
         private string $cityName,
         private HttpClientInterface $httpClient,
-    )
-    {
-
+    ) {
     }
 
     public function getWeatherApiInstance(string $className): WeatherAbstract

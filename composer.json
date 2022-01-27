@@ -61,6 +61,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "fix-cs": [
+            "php-cs-fixer/vendor/bin/php-cs-fixer fix src"
         ]
     },
     "conflict": {
@@ -73,6 +76,8 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.36"
+        "symfony/maker-bundle": "^1.36",
+        "symfony/stopwatch": "6.0.*",
+        "symfony/web-profiler-bundle": "6.0.*"
     }
 }
