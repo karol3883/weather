@@ -110,8 +110,7 @@ class WeatherController extends AbstractController
     public function otherAvailableCities(
         Request $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
         $cityName = $this->getCityNameFromRequest($request);
         $cache = new FilesystemAdapter();
         $otherAvailableCities = $cache->get("{$this->available_cities_cache_key}$cityName", function (ItemInterface $item) use ($entityManager, $cityName) {
