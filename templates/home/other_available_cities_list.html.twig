@@ -1,8 +1,15 @@
 
+<h2> Dostępne dane z miast: </h2>
 <ul class="list-group">
     {% for city in other_available_cities %}
         <li class="list-group-item">
-            {{ city.name }}
+                {{ city.name }}
+                <a
+                    href="{{ path('show_city_temperature', {'cityNameSlug': city.name | lower}) }}"
+                    class="btn btn-secondary float-end"
+                >
+                    Sprawdź
+                </a>
         </li>
     {% endfor %}
 </ul>

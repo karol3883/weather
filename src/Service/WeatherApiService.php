@@ -41,7 +41,6 @@ class WeatherApiService
             throw new \Exception("No data from any api");
         }
 
-
         return round($temperaturesSum / $existingTemperatureData, 2);
     }
 }

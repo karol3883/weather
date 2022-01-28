@@ -27,7 +27,7 @@ class WeatherRepository extends ServiceEntityRepository
             SELECT
                 c.name,
                 w.temperature,
-               DATE_FORMAT(w.create_at, '%Y-%m-%d %H:%i') as date
+               CONCAT(DATE_FORMAT(w.create_at, '%Y-%m-%d %H'), ':00') as date
             FROM
                 weather w   
             JOIN
@@ -39,44 +39,11 @@ class WeatherRepository extends ServiceEntityRepository
                 w.temperature,
                 DATE_FORMAT(w.create_at, '%Y-%m-%d %H')
             ORDER BY
-                DATE_FORMAT(w.create_at, '%Y-%m-%d %H') ASC  
+                DATE_FORMAT(w.create_at, '%Y-%m-%d %H') DESC  
             LIMIT
                 100
         ";
 
-
-        echo "<pre>";
-        var_dump($connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative());
-        echo "</pre>";
         return $connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative();
     }
-
-    // /**
-    //  * @return Weather[] Returns an array of Weather objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Weather
-    {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

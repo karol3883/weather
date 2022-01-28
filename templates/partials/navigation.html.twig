@@ -1,0 +1,21 @@
+<nav class="navbar-light bg-light">
+    <div class="container">
+        <ul class="navbar nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home') }}">Strona główna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('recache_app') }}">Recache</a>
+            </li>
+            <li class="nav-item">
+                <form action="{{ path('show_city_temperature') }}" method="GET">
+                    <div class="input-group">
+                        <input type="text" aria-label="Last name" class="form-control" placeholder="Wpisz nazwę miasta" name="city">
+
+                        <span class="input-group-text"><button class="btn btn-sm">Szukaj</button></span>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -22,17 +22,14 @@ use App\Constants\TimeConstants;
 
 class CacheController extends AbstractController
 {
-    use CacheTrait;
-    use WeatherTrait;
-
-    public function __construct(private HttpClientInterface $httpClient)
-    {
-    }
-
     #[Route('/recache_application', name: 'recache_app')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $cache = new FilesystemAdapter();
-        return $this->redirect('/');
+        $cache->clear();
+
+        $this->addFlash('success', 'Wykonano przekeszowanie');
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

@@ -4,17 +4,10 @@
 
 {% block body %}
     <div class="container mt-2">
-        <div class="row align-items-center">
-            <div class="col-8">
-                <h3>Temperatura w mieście {{ cityName }} aktualnie wynosi {{ currentTemperature }} </h3>
-            </div>
-            <div class="col">
-                <h3> Inne dostępne miasta!</h3>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-8">
+                <h3>Temperatura w mieście <strong>{{ cityName }}</strong> aktualnie wynosi <strong>{{ currentTemperature }}</strong> </h3>
+
                 <table class="table">
                     <thead>
                     <tr>

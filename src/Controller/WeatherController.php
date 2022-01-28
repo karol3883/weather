@@ -37,72 +37,62 @@ class WeatherController extends AbstractController
 
     #[Route('/show_city_temperature/{cityNameSlug?}', name: 'show_city_temperature')]
     public function showDataFromApi(
-        string $cityNameSlug,
+        ?string $cityNameSlug,
         Request $request,
         EntityManagerInterface $entityManager,
         WeatherApiService $weatherApiService
     ): Response {
         $cityName =  $this->getCityNameFromRequest($request, $cityNameSlug);
 
-        $cityEntity = $entityManager->getRepository(City::class);
+        if (!$cityName) {
+            return $this->redirect('/');
+        }
 
-        $city = $entityManager->getRepository(City::class)->findBy(['name' => $cityName]);
+        $cache = new FilesystemAdapter();
 
         try {
-            $temperature = $weatherApiService->getCurrentAverageTemperature($cityName);
+
+            $temperature = $cache->get("{$this->city_temperature_cache_key}$cityName", function (ItemInterface $item) use ($weatherApiService, $cityName, $entityManager) {
+                $item->expiresAfter(TimeConstants::MINUTE * 5);
+
+                $cityEntity = $entityManager->getRepository(City::class);
+                if (!$cityEntity->findBy(['name' => $cityName])) {
+                    $city = new City();
+                    $city->setName($cityName);
+
+                    $entityManager->persist($city);
+                    $entityManager->flush();
+                }
+
+                $city = $cityEntity->findBy(['name' => $cityName]);
+
+                $temperature = $weatherApiService->getCurrentAverageTemperature($cityName);
+                $weather = new Weather();
+                $weather->setCity($city[0]);
+                $weather->setCreateAt(new \DateTimeImmutable());
+                $weather->setTemperature($temperature);
+
+                $entityManager->persist($weather);
+                $entityManager->flush();
+
+                return $temperature;
+            });
+
         } catch (\Exception $exception) {
             throw $this->createNotFoundException(sprintf('Nie znaleziono temperatury dla miasta %s', $cityName), $exception);
         }
 
-        if (!$cityEntity->findBy(['name' => $cityName])) {
-            $city = new City();
-            $city->setName($cityName);
-
-            $entityManager->persist($city);
-            $entityManager->flush();
-        }
-
-        $city = $cityEntity->findBy(['name' => $cityName]);
-
-        $weather = new Weather();
-        $weather->setCity($city[0]);
-        $weather->setCreateAt(new \DateTimeImmutable());
-        $weather->setTemperature($temperature);
-
-        $entityManager->persist($weather);
-        $entityManager->flush();
-
-        $cache = new FilesystemAdapter();
-        $value = $cache->get("my_cache_key$cityName", function (ItemInterface $item) use ($entityManager, $cityName) {
+        $temperatures = $cache->get("my_cache_key$cityName", function (ItemInterface $item) use ($entityManager, $cityName) {
             $item->expiresAfter(TimeConstants::MINUTE * 30);
-
-
             return $entityManager->getRepository(Weather::class)->getTemperaturesFromCityGroupByHours($cityName);
         });
-
 
         return $this->render(
             'home/show_city_temperature.html.twig',
             [
                 'currentTemperature' => $temperature,
                 'cityName' => $cityName,
-                'temperatures' => $value,
-            ]
-        );
-    }
-
-    #[Route('/check_current_temperature', name: 'check_current_temperature')]
-    public function checkCurrentTemperature(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        WeatherApiService $weatherApiService
-    ): Response {
-        return $this->render(
-            'home/show_city_temperature.html.twig',
-            [
-                'currentTemperature' => 1,
-                'cityName' => 123,
-                'temperatures' => 12345,
+                'temperatures' => $temperatures,
             ]
         );
     }

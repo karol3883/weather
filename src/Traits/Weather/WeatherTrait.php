@@ -9,14 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait WeatherTrait
 {
-    private string $available_cities_cache_key = 'other_available_cities_';
-
     /**
      * @return string
      */
     private function getCityNameFromRequest(Request $request, ?string $cityNameSlug = null): string
     {
         $cityName = $request->get('city') ?? $cityNameSlug;
-        return ucfirst(strtolower($cityName));
+        return $cityName ? ucfirst(strtolower($cityName)) : '';
     }
 }

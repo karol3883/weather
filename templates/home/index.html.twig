@@ -1,40 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Temperatura!{% endblock %}
 
 {% block body %}
     <div class="container mt-2">
         <div class="row align-items-center">
-            <h2>
-                Uzupełnij miasto i państwo
-            </h2>
+            <div class="col-md-4">
+                <h2>
+                    Uzupełnij miasto i państwo
+                </h2>
 
-            <div class="col-md-4 border border-light border-2 background-light p-4 bg-light">
-                <form action="{{ path('show_city_temperature') }}" method="GET">
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Miasto</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="exampleFormControlInput1"
-                            placeholder="Warszawa"
-                            name="city"
-                        >
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Państwo</label>
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="exampleFormControlInput1"
-                            placeholder="Polska"
-                            name="country"
-                        >
-                    </div>
-                    <button class="btn btn-dark">
-                        Sprawdź
-                    </button>
-                </form>
+                <div class="border border-light border-2 background-light p-4 bg-light">
+                    <form action="{{ path('show_city_temperature') }}" method="GET">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Miasto</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="exampleFormControlInput1"
+                                    placeholder="Warszawa"
+                                    name="city"
+                            >
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Państwo</label>
+                            <input
+                                    type="email"
+                                    class="form-control"
+                                    id="exampleFormControlInput1"
+                                    placeholder="Polska"
+                                    name="country"
+                            >
+                        </div>
+                        <button class="btn btn-dark">
+                            Sprawdź
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                {{ render(controller('App\\Controller\\WeatherController::otherAvailableCities')) }}
             </div>
         </div>
     </div>

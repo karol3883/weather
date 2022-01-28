@@ -17,6 +17,9 @@
 
     </head>
     <body>
+        {% include './partials/navigation.html.twig' %}
+        {% include './partials/flash.html.twig' %}
+
         {% block body %}{% endblock %}
 
         {{ encore_entry_script_tags('app') }}
