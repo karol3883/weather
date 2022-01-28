@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Traits;
+namespace App\Traits\Weather;
 
 use App\Weather;
 
-trait ApiTrait
+trait WetaherApiTrait
 {
     private array $listOfWeatherApiClasses = [
         Weather\OpenWeatherMap::class,

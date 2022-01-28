@@ -2,22 +2,28 @@
 
 namespace App\Service;
 
-use App\Traits\ApiTrait;
+use App\Traits\Weather\WetaherApiTrait;
 use App\Weather\WeatherFactory;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WeatherApiService
 {
-    use ApiTrait;
+    use WetaherApiTrait;
 
     public function __construct(private HttpClientInterface $httpClient)
     {
     }
 
     /**
+     *
+     * Returns current temperature from passed $cityName base on weather APIs defined
+     * in WetaherApiTrait::$listOfWeatherApiClasses
+     *
+     * @param string $cityName
+     * @return float
      * @throws \Exception
      */
-    public function getCurrentAverageTemperature(string $cityName): mixed
+    public function getCurrentAverageTemperature(string $cityName): float
     {
         $weatherFactory = new WeatherFactory($cityName, $this->httpClient);
 
@@ -27,7 +33,6 @@ class WeatherApiService
         foreach ($this->listOfWeatherApiClasses as $apiClass) {
             try {
                 $weatherApiInstance = $weatherFactory->getWeatherApiInstance($apiClass);
-                $temperature = $weatherApiInstance->getCurrentTemperature();
 
                 if (is_numeric($temperature = $weatherApiInstance->getCurrentTemperature())) {
                     $temperaturesSum += $temperature;
@@ -38,7 +43,7 @@ class WeatherApiService
         }
 
         if ($existingTemperatureData === 0) {
-            throw new \Exception("No data from any api");
+            throw new \Exception("Data not exists, propably wrong city name passed");
         }
 
         return round($temperaturesSum / $existingTemperatureData, 2);

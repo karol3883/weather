@@ -17,14 +17,15 @@ class CityRepository extends ServiceEntityRepository
 {
     private const MAX_CITIES_EXCEPT_CITY_RESULT = 15;
     private const DEFAULT_CITIES_EXCEPT_CITY_RESULT = 5;
+
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, City::class);
     }
 
-
     /**
-     * Returns cities except city passed by
+     * Returns cities except city passed by $cityName parameter
+     *
      * @param string $cityName
      * @return int|mixed|string
      */

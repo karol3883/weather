@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WeatherRepository extends ServiceEntityRepository
 {
+    private const DEFAULT_LIMIT_GROUPED_CITIES = 30;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Weather::class);
@@ -23,11 +25,13 @@ class WeatherRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
 
+        $limit = static::DEFAULT_LIMIT_GROUPED_CITIES;
+
         $sql = "
             SELECT
                 c.name,
                 w.temperature,
-               CONCAT(DATE_FORMAT(w.create_at, '%Y-%m-%d %H'), ':00') as date
+                CONCAT(DATE_FORMAT(w.create_at, '%Y-%m-%d %H'), ':00') as date
             FROM
                 weather w   
             JOIN
@@ -41,9 +45,16 @@ class WeatherRepository extends ServiceEntityRepository
             ORDER BY
                 DATE_FORMAT(w.create_at, '%Y-%m-%d %H') DESC  
             LIMIT
-                100
+                $limit
         ";
 
-        return $connection->prepare($sql)->executeQuery([':val' => $cityName])->fetchAllAssociative();
+        return $connection
+            ->prepare($sql)
+            ->executeQuery(
+                [
+                    ':val' => $cityName
+                ]
+            )
+            ->fetchAllAssociative();
     }
 }
