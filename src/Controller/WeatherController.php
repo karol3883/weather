@@ -51,7 +51,6 @@ class WeatherController extends AbstractController
         $cache = new FilesystemAdapter();
 
         try {
-
             $temperature = $cache->get("{$this->city_temperature_cache_key}$cityName", function (ItemInterface $item) use ($weatherApiService, $cityName, $entityManager) {
                 $item->expiresAfter(TimeConstants::MINUTE * 5);
 
@@ -77,7 +76,6 @@ class WeatherController extends AbstractController
 
                 return $temperature;
             });
-
         } catch (\Exception $exception) {
             throw $this->createNotFoundException(sprintf('Nie znaleziono temperatury dla miasta %s', $cityName), $exception);
         }

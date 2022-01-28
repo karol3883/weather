@@ -14,14 +14,12 @@ abstract class WeatherAbstract
 
     public const API_METHOD_TYPE = 'GET';
 
-
     public function __construct(
         protected string $cityName,
         private HttpClientInterface $httpClient
     ) {
         $this->setResponseData();
     }
-
 
     protected function setResponseData(): void
     {
