@@ -74,5 +74,5 @@
             "allow-contrib": false,
             "require": "6.0.*"
         }
-    },
+    }
 }
